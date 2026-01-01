@@ -29,11 +29,19 @@ render_html("""
     <style>
     @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-    /* 1. 글로벌 스타일 */
+    /* 1. 글로벌 스타일 및 다크모드 강제 해제 */
     html, body, [class*="css"] {
         font-family: 'Pretendard', sans-serif;
-        background-color: #f2f4f6;
-        color: #191f28;
+        background-color: #f2f4f6 !important; /* 배경색 강제 */
+        color: #191f28 !important; /* 기본 글자색 강제 */
+    }
+
+    /* Streamlit 기본 패딩 줄이기 (모바일 공간 확보) */
+    .block-container {
+        padding-top: 1rem !important;
+        padding-bottom: 3rem !important;
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
     }
 
     /* 2. 헤더 카드 (Deep Night Gradient) */
@@ -41,11 +49,15 @@ render_html("""
         background: linear-gradient(135deg, #0F2027 0%, #203A43 50%, #2C5364 100%);
         padding: 32px 24px;
         border-radius: 24px;
-        color: white;
-        margin-bottom: 24px;
+        color: white !important;
+        margin-bottom: 20px;
         box-shadow: 0 10px 25px rgba(32, 58, 67, 0.3);
         position: relative;
         overflow: hidden;
+    }
+    /* 헤더 내부 텍스트는 흰색이 기본이지만, 뱃지는 예외로 처리해야 함 */
+    .header-card h2, .header-card div:not(.market-badge), .header-card span:not(.market-badge) {
+        color: white !important;
     }
     .header-card::before {
         content: ''; position: absolute; top: -60px; right: -60px;
@@ -54,7 +66,7 @@ render_html("""
     }
     .header-content { position: relative; z-index: 1; }
 
-    /* 3. 뱃지 스타일 */
+    /* 3. 뱃지 스타일 (우선순위 대폭 강화) */
     .market-badge {
         display: inline-flex; align-items: center; gap: 6px;
         padding: 6px 12px; border-radius: 20px;
@@ -62,10 +74,26 @@ render_html("""
         margin-bottom: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-    .status-open { background: #00e676; color: #003300; animation: pulse 2s infinite; }
-    .status-pre { background: #ffea00; color: #3e2723; }
-    .status-after { background: #d1c4e9; color: #4527a0; }
-    .status-closed { background: #eceff1; color: #455a64; border: 1px solid #cfd8dc; }
+
+    /* 여기서 .header-card를 앞에 붙여서 우선순위를 높임 (흰색 강제 규칙을 이기기 위함) */
+    .header-card .status-open { 
+        background: #00e676 !important; 
+        color: #003300 !important; 
+        animation: pulse 2s infinite; 
+    }
+    .header-card .status-pre { 
+        background: #ffea00 !important; 
+        color: #3e2723 !important; 
+    }
+    .header-card .status-after { 
+        background: #d1c4e9 !important; 
+        color: #4527a0 !important; 
+    }
+    .header-card .status-closed { 
+        background: #eceff1 !important; 
+        color: #455a64 !important; /* 이제 이 색상이 적용됩니다! */
+        border: 1px solid #cfd8dc; 
+    }
 
     @keyframes pulse {
         0% { box-shadow: 0 0 0 0 rgba(0, 230, 118, 0.7); }
@@ -79,6 +107,7 @@ render_html("""
         font-size: 0.8rem; font-weight: 600;
         backdrop-filter: blur(5px);
         border: 1px solid rgba(255,255,255,0.2);
+        color: white !important; /* 환율은 흰색 유지 */
     }
 
     /* 4. 타임라인 (유리 질감) */
@@ -86,60 +115,72 @@ render_html("""
     .glass-box {
         flex: 1; text-align: center;
         background: rgba(255,255,255,0.1);
-        padding: 10px; border-radius: 16px;
+        padding: 10px 4px;
+        border-radius: 16px;
         border: 1px solid rgba(255,255,255,0.15);
         backdrop-filter: blur(4px);
     }
-    .t-label { font-size: 0.7rem; color: rgba(255,255,255,0.8); margin-bottom: 4px; }
-    .t-val { font-size: 0.9rem; font-weight: 700; color: #fff; white-space: nowrap; }
-    .accent-gold { color: #ffd700; }
-    .accent-green { color: #69f0ae; }
+    .t-label { font-size: 0.7rem; color: rgba(255,255,255,0.8) !important; margin-bottom: 4px; }
+    .t-val { font-size: 0.9rem; font-weight: 700; color: #fff !important; white-space: nowrap; }
+    .accent-gold { color: #ffd700 !important; }
+    .accent-green { color: #69f0ae !important; }
 
-    /* 5. 메인 정보 카드 (그림자 & 라운드) */
+    /* 5. 메인 정보 카드 */
     .info-card {
-        background: white; border-radius: 24px; padding: 24px;
+        background: white !important; border-radius: 24px; padding: 24px;
         box-shadow: 0 8px 24px rgba(0,0,0,0.03);
         border: 1px solid #ffffff; margin-bottom: 20px;
     }
     .metric-grid { display: flex; gap: 8px; margin-top: 20px; }
     .metric-box {
-        flex: 1; background: #f9f9fb; border-radius: 14px;
-        padding: 12px 6px; text-align: center;
+        flex: 1; background: #f9f9fb !important; border-radius: 14px;
+        padding: 12px 4px;
+        text-align: center;
         border: 1px solid #f0f0f5;
+        min-width: 0;
     }
-    .m-title { font-size: 0.7rem; color: #8b95a1; font-weight: 600; margin-bottom: 4px; white-space: nowrap; }
-    .m-data { font-size: 0.95rem; font-weight: 800; color: #333; }
+    .m-title { font-size: 0.7rem; color: #8b95a1 !important; font-weight: 600; margin-bottom: 4px; white-space: nowrap; }
+    .m-data { font-size: 0.95rem; font-weight: 800; color: #333 !important; }
 
-    /* 6. 계산기 카드 공통 스타일 */
-    .calc-card-bg { background: white; border-radius: 24px; padding: 20px; border: 1px solid #e0e0e0; margin-top: 10px; }
+    /* 6. 계산기 카드 공통 */
+    .calc-card-bg { background: white !important; border-radius: 24px; padding: 20px; border: 1px solid #e0e0e0; margin-top: 10px; }
     .calc-row { display: flex; justify-content: space-between; margin-bottom: 10px; align-items: center; }
-    .calc-label { font-size: 0.9rem; color: #666; }
-    .calc-val { font-weight: 700; color: #333; }
+    .calc-label { font-size: 0.9rem; color: #666 !important; }
+    .calc-val { font-weight: 700; color: #333 !important; }
     .calc-divider { border-top: 1px dashed #ddd; margin: 12px 0; }
-    .calc-total-label { font-size: 1rem; font-weight: 700; color: #3182f6; }
-    .calc-total-val { font-size: 1.4rem; font-weight: 800; color: #3182f6; }
+    .calc-total-label { font-size: 1rem; font-weight: 700; color: #3182f6 !important; }
+    .calc-total-val { font-size: 1.4rem; font-weight: 800; color: #3182f6 !important; }
 
     /* 주의사항 박스 */
     .caution-box {
         margin-top: 16px; padding: 14px;
-        background: #fafafa; border-radius: 12px;
+        background: #fafafa !important; border-radius: 12px;
         border: 1px solid #eee;
-        font-size: 0.8rem; color: #767676; line-height: 1.5;
+        font-size: 0.8rem; color: #767676 !important; line-height: 1.5;
     }
-    .caution-header { font-weight: 700; color: #555; margin-bottom: 4px; display: block; }
+    .caution-header { font-weight: 700; color: #555 !important; margin-bottom: 4px; display: block; }
 
     /* 뱃지류 */
-    .badge-roc { background: #fff0f2; color: #f04452; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
-    .badge-safe { background: #e8fdf3; color: #02cba5; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
-    .ticker-tag { background: #e8f3ff; color: #3182f6; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; }
+    .badge-roc { background: #fff0f2 !important; color: #f04452 !important; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .badge-safe { background: #e8fdf3 !important; color: #02cba5 !important; padding: 4px 8px; border-radius: 6px; font-size: 0.75rem; font-weight: 700; }
+    .ticker-tag { background: #e8f3ff !important; color: #3182f6 !important; padding: 4px 10px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; }
 
     /* Streamlit 위젯 커스텀 */
     div.stButton > button {
         width: 100%; border-radius: 12px; font-weight: 700;
-        background: #fff; border: 1px solid #e5e8eb; color: #6b7684;
+        background: #fff !important; 
+        border: 1px solid #e5e8eb !important;
+        color: #6b7684 !important;
         height: 48px; transition: all 0.2s;
     }
-    div.stButton > button:hover { background: #f2f4f6; color: #333; border-color: #ccc; }
+    div.stButton > button:hover { 
+        background: #f2f4f6 !important; 
+        color: #333 !important; 
+        border-color: #ccc !important; 
+    }
+    div.stButton > button:active {
+        color: #000 !important;
+    }
 
     /* 탭 메뉴 스타일 */
     .stTabs [data-baseweb="tab-list"] {
@@ -147,12 +188,29 @@ render_html("""
         padding-bottom: 4px; -webkit-overflow-scrolling: touch;
     }
     .stTabs [data-baseweb="tab"] {
-        height: 42px; background-color: #fff; 
+        height: 42px; background-color: #fff !important; 
         border-radius: 20px; border: 1px solid #e5e8eb;
         padding: 0 16px; font-size: 0.85rem; font-weight: 600;
+        color: #666 !important;
     }
     .stTabs [aria-selected="true"] {
-        background-color: #3182f6; color: white; border-color: #3182f6;
+        background-color: #3182f6 !important; 
+        color: white !important; 
+        border-color: #3182f6 !important;
+    }
+
+    /* [MOBILE] 모바일 반응형 처리 */
+    @media (max-width: 480px) {
+        .header-card { padding: 24px 16px; margin-bottom: 16px; }
+        .header-card h2 { font-size: 1.3rem !important; }
+        .timeline-container { gap: 6px; margin-top: 20px; }
+        .t-val { font-size: 0.8rem; }
+
+        .info-card { padding: 20px 16px; }
+        .m-data { font-size: 0.85rem !important; }
+
+        .calc-card-bg { padding: 16px; }
+        .calc-total-val { font-size: 1.2rem !important; }
     }
     </style>
 """)
