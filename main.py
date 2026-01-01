@@ -35,10 +35,10 @@ render_html("""
         background-color: #f2f4f6 !important; /* 배경색 강제 */
         color: #191f28 !important; /* 기본 글자색 강제 */
     }
-
-    /* Streamlit 기본 패딩 줄이기 (모바일 공간 확보) */
+    
+    /* Streamlit 기본 패딩 조정 (버튼이 보이도록 상단 여백 확보) */
     .block-container {
-        padding-top: 1rem !important;
+        padding-top: 3rem !important; /* 여기를 1rem -> 3rem으로 늘렸습니다 */
         padding-bottom: 3rem !important;
         padding-left: 1rem !important;
         padding-right: 1rem !important;
@@ -74,7 +74,7 @@ render_html("""
         margin-bottom: 12px;
         box-shadow: 0 4px 10px rgba(0,0,0,0.15);
     }
-
+    
     /* 여기서 .header-card를 앞에 붙여서 우선순위를 높임 (흰색 강제 규칙을 이기기 위함) */
     .header-card .status-open { 
         background: #00e676 !important; 
@@ -205,10 +205,10 @@ render_html("""
         .header-card h2 { font-size: 1.3rem !important; }
         .timeline-container { gap: 6px; margin-top: 20px; }
         .t-val { font-size: 0.8rem; }
-
+        
         .info-card { padding: 20px 16px; }
         .m-data { font-size: 0.85rem !important; }
-
+        
         .calc-card-bg { padding: 16px; }
         .calc-total-val { font-size: 1.2rem !important; }
     }
